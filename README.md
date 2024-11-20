@@ -6,45 +6,43 @@
 3. [Backend](#backend)
 4. [Frontend](#frontend)
 5. [Banco de Dados](#banco-de-dados)
-6. [APIs](#apis)
-7. [Guias de Uso](#guias-de-uso)
+6. [Guias de Uso](#guias-de-uso)
+7. [Testes](#testes)
+8. [Manutenção](#manutenção)
+9. [Segurança](#segurança)
+
+---
 
 ## Visão Geral
 
 ### Descrição do Projeto
-Sistema web desenvolvido para criar itinerários de viagem personalizados automaticamente, integrando preferências do usuário e destinos específicos.
+Sistema web desenvolvido para criar itinerários de viagem personalizados automaticamente, integrando preferências do usuário e destinos específicos. Ele também oferece integração com previsões meteorológicas para ajudar no planejamento.
 
 ### Objetivos
-- Automatizar a criação de roteiros de viagem
-- Fornecer sugestões personalizadas
-- Facilitar o planejamento de viagens
+- Automatizar a criação de roteiros de viagem.
+- Fornecer sugestões personalizadas.
+- Exibir informações meteorológicas do destino.
+- Facilitar o planejamento de viagens.
+
+---
 
 ## Arquitetura
 
 ### Estrutura do Sistema
-```
-projeto/
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── models.py
-│   │   └── services/
-│   └── tests/
-└── frontend/
-    ├── src/
-    │   ├── components/
-    │   ├── services/
-    │   └── styles/
-    └── public/
-```
+projeto/ ├── backend/ │ ├── app/ │ │ ├── main.py │ │ ├── models/ │ │ │ └── itinerary.py │ │ ├── services/ │ │ │ └── itinerary_services.py │ │ └── utils/ │ │ └── config.py │ └── tests/ ├── frontend/ │ ├── public/ │ │ └── index.html │ └── src/ │ ├── components/ │ │ ├── Form.js │ │ └── ItineraryResult.js │ ├── services/ │ │ └── api.js │ └── assets/ │ └── css/ │ └── styles.css └── README.md
+
+php
+Copiar código
+
+---
 
 ## Backend
 
 ### Endpoints da API
 
 #### 1. Geração de Itinerário
-```python
-POST /api/generate-itinerary
+```http
+POST /generate-itinerary
 
 # Parâmetros de entrada
 {
@@ -55,84 +53,58 @@ POST /api/generate-itinerary
 
 # Resposta
 {
-    "itinerary": [
-        {
-            "day": 1,
-            "activities": [...]
+    "itinerario": {
+        "destino": string,
+        "dias": integer,
+        "roteiro": {
+            "conteudo": string
         }
-    ]
+    },
+    "previsao_tempo": {
+        "list": [
+            {
+                "dt": integer,
+                "main": { "temp": float, "humidity": integer },
+                "weather": [ { "description": string } ]
+            }
+        ]
+    }
 }
-```
-
-#### 2. Status da API
-```python
-GET /api/status
+2. Status da API
+http
+Copiar código
+GET /
 
 # Resposta
 {
-    "status": "online",
-    "version": "1.0.0"
+    "message": "API funcionando!"
 }
-```
-
-### Modelos de Dados
-```python
-class Itinerary:
-    id: int
+Modelos de Dados
+python
+Copiar código
+class ItineraryRequest(BaseModel):
     destination: str
     days: int
-    preferences: str
-    activities: List[Activity]
+    preferences: str = "pontos turísticos populares"
+Frontend
+Componentes Principais
+1. Formulário de Geração
+Arquivo: Form.js
+Descrição: Permite ao usuário inserir o destino, número de dias e preferências para gerar o itinerário.
+Props:
+onSubmit: Função chamada ao enviar o formulário.
+loading: Indica o status de carregamento.
+2. Exibição de Itinerário
+Arquivo: ItineraryResult.js
+Descrição: Exibe o itinerário gerado e a previsão do tempo.
+Props:
+result: Objeto contendo o itinerário e as previsões meteorológicas.
+Banco de Dados
+Estrutura
+Embora o sistema atual não dependa diretamente de um banco de dados, uma sugestão para implementação futura é:
 
-class Activity:
-    id: int
-    description: str
-    time: str
-    location: str
-```
-
-## Frontend
-
-### Componentes Principais
-
-#### 1. Formulário de Geração
-```javascript
-// Form.js
-/**
- * Componente de formulário principal
- * Props:
- * - onSubmit: Function
- * - loading: boolean
- */
-```
-
-#### 2. Exibição de Itinerário
-```javascript
-// ItineraryDisplay.js
-/**
- * Exibe o itinerário gerado
- * Props:
- * - itinerary: Array
- * - onEdit: Function
- */
-```
-
-### Serviços
-
-```javascript
-// api.js
-/**
- * Serviços de API
- */
-const generateItinerary = async (data) => {
-    // Implementação
-};
-```
-
-## Banco de Dados
-
-### Estrutura
-```sql
+sql
+Copiar código
 CREATE TABLE itineraries (
     id SERIAL PRIMARY KEY,
     destination VARCHAR(100),
@@ -143,111 +115,79 @@ CREATE TABLE itineraries (
 
 CREATE TABLE activities (
     id SERIAL PRIMARY KEY,
-    itinerary_id INTEGER,
+    itinerary_id INTEGER REFERENCES itineraries(id),
     description TEXT,
     time TIME,
     location VARCHAR(200)
 );
-```
-
-## Guias de Uso
-
-### 1. Configuração do Ambiente
-
-```bash
-# Backend
+Guias de Uso
+1. Configuração do Ambiente
+Backend
+bash
+Copiar código
+# Criar e ativar ambiente virtual
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # Linux/MacOS
+venv\Scripts\activate     # Windows
+
+# Instalar dependências
 pip install -r requirements.txt
-
-# Frontend
+Frontend
+bash
+Copiar código
+# Instalar dependências
 npm install
-```
+2. Variáveis de Ambiente
+Crie um arquivo .env no diretório backend/app/ com as seguintes configurações:
 
-### 2. Variáveis de Ambiente
-```env
-# .env
-DATABASE_URL=postgresql://user:password@localhost/dbname
-API_KEY=your_api_key
-PORT=8000
-```
-
-### 3. Execução
-
-```bash
-# Backend
-uvicorn main:app --reload
-
-# Frontend
+env
+Copiar código
+OPENAI_API_KEY=your_openai_api_key
+WEATHER_API_KEY=your_weather_api_key
+3. Execução
+Backend
+bash
+Copiar código
+uvicorn app.main:app --reload
+Frontend
+bash
+Copiar código
 npm start
-```
-
-## Testes
-
-### Backend
-```bash
-# Executar testes
+Testes
+Backend
+Executar testes:
+bash
+Copiar código
 pytest
-
-# Cobertura de testes
+Cobertura de testes:
+bash
+Copiar código
 pytest --cov
-```
-
-### Frontend
-```bash
-# Executar testes
+Frontend
+Executar testes:
+bash
+Copiar código
 npm test
-
-# Modo watch
+Modo de observação:
+bash
+Copiar código
 npm test -- --watch
-```
+Manutenção
+Logs
+Os logs do backend são gerados automaticamente e podem ser configurados no arquivo principal.
+Para logs persistentes, configure o uso de um sistema como o Loguru ou serviços em nuvem.
+Segurança
+Autenticação
+Implemente autenticação com JWT Tokens (opcional).
+Validações
+Todos os inputs do usuário são sanitizados para evitar ataques de SQL Injection ou XSS.
+O CORS está configurado para permitir apenas origens confiáveis.
+Métricas e Monitoramento
+Recomenda-se configurar ferramentas como Prometheus ou New Relic para monitorar:
 
-## Manutenção
+Tempo de resposta das APIs.
+Taxa de erro.
+Uso de recursos do servidor.
+📝 Nota: Esta documentação deve ser atualizada conforme o sistema evolui.
 
-### Logs
-- Os logs são armazenados em `/var/log/app/`
-- Formato: `YYYY-MM-DD HH:mm:ss [LEVEL] message`
-
-### Backup
-- Backup diário do banco às 00:00
-- Armazenado em `/backup/`
-
-## Segurança
-
-### Autenticação
-- JWT Token
-- Expiração: 24 horas
-- Refresh Token disponível
-
-### Validações
-- Sanitização de inputs
-- Rate limiting: 100 requisições/hora
-- CORS configurado
-
-## Monitoramento
-
-### Métricas
-- Tempo de resposta
-- Taxa de erro
-- Uso de recursos
-
-### Alertas
-- Email em caso de erro crítico
-- Monitoramento 24/7
-
-## Suporte
-
-### Contato
-- Email: suporte@exemplo.com
-- Tel: (11) 1234-5678
-
-### FAQ
-1. Como resetar a senha?
-2. Como gerar novo token?
-3. Limites de uso da API?
-
----
-
-📝 **Nota**: Esta documentação deve ser atualizada conforme o sistema evolui.
-
-🔄 **Última atualização**: [DATA]
+🔄 Última atualização: [20/11/2024]
