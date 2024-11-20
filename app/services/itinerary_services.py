@@ -2,20 +2,19 @@ import google.generativeai as genai
 import requests
 from dotenv import load_dotenv
 import os
-from datetime import datetime
 from app.models.itinerary import ItineraryRequest
 
 # Carregar variáveis de ambiente
-load_dotenv()
+load_dotenv(dotenv_path="/itinerario_viagens_2/.env")
 
 # Configurações de APIs
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+API_KEY = os.getenv("API_KEY")
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
 # Validação de chaves API
 def validate_api_keys():
-    if not GEMINI_API_KEY:
+    if not API_KEY:
         raise ValueError("API Key do Gemini não encontrada. Verifique o arquivo .env")
     if not WEATHER_API_KEY:
         raise ValueError("API Key da Weather API não encontrada. Verifique o arquivo .env")
@@ -23,7 +22,7 @@ def validate_api_keys():
 validate_api_keys()
 
 # Configurar a API Gemini
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key=API_KEY)
 
 async def generate_itinerary_service(request: ItineraryRequest):
     """
@@ -32,7 +31,7 @@ async def generate_itinerary_service(request: ItineraryRequest):
     itinerary = generate_itinerary(request)
     weather = get_weather_forecast(request)
 
-    # Retornar dados combinados
+    # Retornar os dados diretamente sem formatação adicional
     return {
         "itinerario": {
             "destino": request.destination,
@@ -43,9 +42,9 @@ async def generate_itinerary_service(request: ItineraryRequest):
         "previsao_tempo": weather,
     }
 
-def generate_itinerary(request: ItineraryRequest) -> str:
+def generate_itinerary(request: ItineraryRequest) -> dict:
     """
-    Gera o itinerário usando a API Gemini.
+    Gera o itinerário usando a API Gemini e retorna em formato bruto.
     """
     prompt = (
         f"Crie um itinerário de {request.days} dias para {request.destination} com foco em {request.preferences}. "
@@ -55,13 +54,13 @@ def generate_itinerary(request: ItineraryRequest) -> str:
     try:
         model = genai.GenerativeModel("gemini-pro")
         response = model.generate_content(prompt)
-        return response.text
+        return {"conteudo": response.text}
     except Exception as e:
         raise Exception(f"Erro ao gerar itinerário: {str(e)}")
 
-def get_weather_forecast(request: ItineraryRequest) -> list:
+def get_weather_forecast(request: ItineraryRequest) -> dict:
     """
-    Obtém a previsão do tempo para o destino e formata os resultados.
+    Obtém a previsão do tempo para o destino e retorna os dados brutos em JSON.
     """
     try:
         response = requests.get(
@@ -75,24 +74,6 @@ def get_weather_forecast(request: ItineraryRequest) -> list:
             },
         )
         response.raise_for_status()
-        weather_data = response.json()
-        return format_weather_data(weather_data, request.days)
+        return response.json()  # Retorna os dados brutos da API
     except Exception as e:
         raise Exception(f"Erro ao obter dados climáticos: {str(e)}")
-
-def format_weather_data(weather_data: dict, days: int) -> list:
-    """
-    Formata os dados climáticos obtidos da API para exibição.
-    """
-    try:
-        formatted_weather = []
-        for day in weather_data["list"][:days]:
-            formatted_weather.append({
-                "data": datetime.fromtimestamp(day["dt"]).strftime("%d/%m/%Y"),
-                "temperatura": f"{round(day['main']['temp'])}°C",
-                "clima": day["weather"][0]["description"],
-                "umidade": f"{day['main']['humidity']}%",
-            })
-        return formatted_weather
-    except KeyError as e:
-        raise Exception(f"Erro ao formatar dados climáticos: {str(e)}")

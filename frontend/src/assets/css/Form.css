@@ -1,0 +1,26 @@
+.weather-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.weather-card .card-body {
+  font-size: 0.9rem;
+}
+
+.list-group-item {
+  font-size: 1rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+}
+
+.card-title {
+  color: #007bff;
+}
+
+.card-title,
+.card-text {
+  margin: 5px 0;
+}
