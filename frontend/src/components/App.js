@@ -21,49 +21,99 @@ function App() {
 
   return (
     <Router>
-      <nav>
-        <Link to="/">Home</Link> | <Link to="/plan">Planejador</Link>
-      </nav>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="/plan"
-          element={
-            <div>
-              <h1>Planejador de Viagens</h1>
-              <form onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  placeholder="Destino"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Dias"
-                  value={days}
-                  onChange={(e) => setDays(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Preferências"
-                  value={preferences}
-                  onChange={(e) => setPreferences(e.target.value)}
-                />
-                <button type="submit">Gerar Itinerário</button>
-              </form>
-              {result && (
-                <div>
-                  <h2>Itinerário</h2>
-                  <pre>{result.itinerary}</pre>
-                  <h2>Previsão do Tempo</h2>
-                  <pre>{JSON.stringify(result.weather, null, 2)}</pre>
-                </div>
-              )}
-            </div>
-          }
-        />
-      </Routes>
+      {/* Cabeçalho com navegação */}
+      <header className="bg-primary text-white py-3">
+        <div className="container d-flex justify-content-between">
+          <h1 className="h3">Planejador de Viagens</h1>
+          <nav>
+            <Link to="/" className="text-white text-decoration-none mx-3">
+              Home
+            </Link>
+            <Link to="/plan" className="text-white text-decoration-none mx-3">
+              Planejador
+            </Link>
+          </nav>
+        </div>
+      </header>
+
+      {/* Conteúdo principal */}
+      <main className="container mt-5">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="/plan"
+            element={
+              <div className="card p-4 shadow">
+                <h1 className="text-center mb-4">Planejador de Viagens</h1>
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="destination" className="form-label">
+                      Destino
+                    </label>
+                    <input
+                      type="text"
+                      id="destination"
+                      className="form-control"
+                      placeholder="Exemplo: Paris"
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="days" className="form-label">
+                      Dias
+                    </label>
+                    <input
+                      type="number"
+                      id="days"
+                      className="form-control"
+                      placeholder="Número de dias"
+                      value={days}
+                      onChange={(e) => setDays(e.target.value)}
+                      required
+                      min="1"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="preferences" className="form-label">
+                      Preferências
+                    </label>
+                    <input
+                      type="text"
+                      id="preferences"
+                      className="form-control"
+                      placeholder="Exemplo: Museus, praias"
+                      value={preferences}
+                      onChange={(e) => setPreferences(e.target.value)}
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-primary w-100">
+                    Gerar Itinerário
+                  </button>
+                </form>
+
+                {result && (
+                  <div className="mt-5">
+                    <h2 className="text-center">Resultado</h2>
+                    <div className="card p-3 shadow">
+                      <h4>Itinerário</h4>
+                      <pre>{result.itinerary}</pre>
+                      <h4>Previsão do Tempo</h4>
+                      <pre>{JSON.stringify(result.weather, null, 2)}</pre>
+                    </div>
+                  </div>
+                )}
+              </div>
+            }
+          />
+        </Routes>
+      </main>
+
+      {/* Rodapé */}
+      <footer className="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Planejador de Viagens. Todos os direitos reservados.</p>
+      </footer>
     </Router>
   );
 }

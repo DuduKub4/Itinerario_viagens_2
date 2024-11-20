@@ -1,11 +1,22 @@
 import openai
 import requests
+from dotenv import load_dotenv
+import os
 from app.models.itinerary import ItineraryRequest
 
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
+
 # Configurações
-OPENAI_API_KEY = "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"
-WEATHER_API_KEY = "4966a6c113f408cdaa2656b598f7cecd"  
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/forecast"
+
+# Verificar se as chaves foram carregadas
+if not OPENAI_API_KEY:
+    raise ValueError("API Key da OpenAI não encontrada. Verifique o arquivo .env")
+if not WEATHER_API_KEY:
+    raise ValueError("API Key da Weather API não encontrada. Verifique o arquivo .env")
 
 openai.api_key = OPENAI_API_KEY
 
