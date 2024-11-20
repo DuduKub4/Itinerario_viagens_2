@@ -29,53 +29,74 @@ Sistema web desenvolvido para criar itinerários de viagem personalizados automa
 ## Arquitetura
 
 ### Estrutura do Sistema
-projeto/ ├── backend/ │ ├── app/ │ │ ├── main.py │ │ ├── models/ │ │ │ └── itinerary.py │ │ ├── services/ │ │ │ └── itinerary_services.py │ │ └── utils/ │ │ └── config.py │ └── tests/ ├── frontend/ │ ├── public/ │ │ └── index.html │ └── src/ │ ├── components/ │ │ ├── Form.js │ │ └── ItineraryResult.js │ ├── services/ │ │ └── api.js │ └── assets/ │ └── css/ │ └── styles.css └── README.md
+```plaintext
+projeto/
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── models/
+│   │   │   └── itinerary.py
+│   │   ├── services/
+│   │   │   └── itinerary_services.py
+│   │   └── utils/
+│   │       └── config.py
+│   └── tests/
+├── frontend/
+│   ├── public/
+│   │   └── index.html
+│   └── src/
+│       ├── components/
+│       │   ├── Form.js
+│       │   └── ItineraryResult.js
+│       ├── services/
+│       │   └── api.js
+│       └── assets/
+│           └── css/
+│               └── styles.css
+└── README.md
+Backend
+Endpoints da API
+Geração de Itinerário
+Método: POST
+Endpoint: /generate-itinerary
+Parâmetros de entrada:
 
-php
+json
 Copiar código
-
----
-
-## Backend
-
-### Endpoints da API
-
-#### 1. Geração de Itinerário
-```http
-POST /generate-itinerary
-
-# Parâmetros de entrada
 {
-    "destination": string,
-    "days": integer,
-    "preferences": string
+    "destination": "string",
+    "days": "integer",
+    "preferences": "string"
 }
+Exemplo de resposta:
 
-# Resposta
+json
+Copiar código
 {
     "itinerario": {
-        "destino": string,
-        "dias": integer,
+        "destino": "string",
+        "dias": "integer",
         "roteiro": {
-            "conteudo": string
+            "conteudo": "string"
         }
     },
     "previsao_tempo": {
         "list": [
             {
-                "dt": integer,
-                "main": { "temp": float, "humidity": integer },
-                "weather": [ { "description": string } ]
+                "dt": "integer",
+                "main": { "temp": "float", "humidity": "integer" },
+                "weather": [ { "description": "string" } ]
             }
         ]
     }
 }
-2. Status da API
-http
-Copiar código
-GET /
+Status da API
+Método: GET
+Endpoint: /
+Exemplo de resposta:
 
-# Resposta
+json
+Copiar código
 {
     "message": "API funcionando!"
 }
@@ -88,17 +109,12 @@ class ItineraryRequest(BaseModel):
     preferences: str = "pontos turísticos populares"
 Frontend
 Componentes Principais
-1. Formulário de Geração
+Formulário de Geração
 Arquivo: Form.js
 Descrição: Permite ao usuário inserir o destino, número de dias e preferências para gerar o itinerário.
-Props:
-onSubmit: Função chamada ao enviar o formulário.
-loading: Indica o status de carregamento.
-2. Exibição de Itinerário
+Exibição de Itinerário
 Arquivo: ItineraryResult.js
 Descrição: Exibe o itinerário gerado e a previsão do tempo.
-Props:
-result: Objeto contendo o itinerário e as previsões meteorológicas.
 Banco de Dados
 Estrutura
 Embora o sistema atual não dependa diretamente de um banco de dados, uma sugestão para implementação futura é:
@@ -121,7 +137,7 @@ CREATE TABLE activities (
     location VARCHAR(200)
 );
 Guias de Uso
-1. Configuração do Ambiente
+Configuração do Ambiente
 Backend
 bash
 Copiar código
@@ -137,14 +153,14 @@ bash
 Copiar código
 # Instalar dependências
 npm install
-2. Variáveis de Ambiente
+Variáveis de Ambiente
 Crie um arquivo .env no diretório backend/app/ com as seguintes configurações:
 
 env
 Copiar código
 OPENAI_API_KEY=your_openai_api_key
 WEATHER_API_KEY=your_weather_api_key
-3. Execução
+Execução
 Backend
 bash
 Copiar código
@@ -155,22 +171,22 @@ Copiar código
 npm start
 Testes
 Backend
-Executar testes:
 bash
 Copiar código
+# Executar testes
 pytest
-Cobertura de testes:
 bash
 Copiar código
+# Cobertura de testes
 pytest --cov
 Frontend
-Executar testes:
 bash
 Copiar código
+# Executar testes
 npm test
-Modo de observação:
 bash
 Copiar código
+# Modo de observação
 npm test -- --watch
 Manutenção
 Logs
@@ -190,4 +206,4 @@ Taxa de erro.
 Uso de recursos do servidor.
 📝 Nota: Esta documentação deve ser atualizada conforme o sistema evolui.
 
-🔄 Última atualização: [20/11/2024]
+🔄 Última atualização: [Insira a Data]
