@@ -1,0 +1,7 @@
+# Arquivos e pastas para ignorar no Git
+__pycache__/
+*.pyc
+.env
+node_modules/
+dist/
+build/
