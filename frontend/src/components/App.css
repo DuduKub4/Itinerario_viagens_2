@@ -1,0 +1,50 @@
+.App {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  text-align: center;
+  padding: 20px;
+}
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  transition: transform 0.2s;
+  border: none;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.btn-primary {
+  background-color: #0056b3;
+  border: none;
+  padding: 10px 20px;
+}
+
+.btn-primary:hover {
+  background-color: #003d82;
+}
+
+.weather-card {
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+}
+
+.form-control:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 0 0.2rem rgba(0, 86, 179, 0.25);
+}
+
+.text-primary {
+  color: #0056b3 !important;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+}
