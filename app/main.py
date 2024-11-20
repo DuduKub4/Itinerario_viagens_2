@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.services.itinerary_services import generate_itinerary_services
+from app.services.itinerary_services import generate_itinerary_service
 from app.models.itinerary import ItineraryRequest
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -23,4 +23,4 @@ async def root():
 # Rota para gerar itinerário
 @app.post("/generate-itinerary")
 async def generate_itinerary(request: ItineraryRequest):
-    return await generate_itinerary_services(request)
+    return await generate_itinerary_service(request)
