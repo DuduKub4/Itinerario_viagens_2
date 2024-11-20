@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 # Carregar variáveis de ambiente
-load_dotenv()
+load_dotenv(dotenv_path="itinerario_viagens_2/.env")
 
 class Config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "sua-api-key-openai")
