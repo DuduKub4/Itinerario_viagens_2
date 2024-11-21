@@ -1,4 +1,4 @@
-# Arquivos e pastas para ignorar no Git
+# Arquivos e pastas para ignorar no Gitt
 __pycache__/
 *.pyc
 .env

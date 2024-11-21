@@ -183,7 +183,7 @@ npm install
 Crie um arquivo `.env` no diretório `backend/app/` com as seguintes configurações:
 
 ```env
-OPENAI_API_KEY=your_openai_api_key
+API_KEY=your_gemini_api_key
 WEATHER_API_KEY=your_weather_api_key
 ```
 
